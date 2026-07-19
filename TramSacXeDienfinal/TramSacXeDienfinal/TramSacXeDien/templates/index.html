@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tối Ưu Hóa Vị Trí Trạm Sạc Xe Điện</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <h1>⚡ Tối Ưu Hóa Trạm Sạc Xe Điện</h1>
+                <p>Optimal EV Charging Station Placement Optimizer</p>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <h2>Bảng Điều Khiển</h2>
+            
+            <div class="control-section">
+                <h3>1. Tạo Dữ Liệu</h3>
+                <div class="form-group">
+                    <label for="numAreas">Số lượng khu vực:</label>
+                    <input type="number" id="numAreas" min="10" max="100" value="30">
+                </div>
+                <button id="generateBtn" class="btn btn-primary">Tạo Dữ Liệu</button>
+                <div id="generateStatus" class="status-message"></div>
+            </div>
+
+            <div class="control-section">
+                <h3>2. Cấu Hình Thuật Toán</h3>
+                <div class="form-group">
+                    <label for="kStations">Số trạm sạc (K):</label>
+                    <input type="number" id="kStations" min="1" max="20" value="5">
+                </div>
+                <div class="form-group">
+                    <label for="numRestarts">Số lần khởi động lại (RRHC):</label>
+                    <input type="number" id="numRestarts" min="10" max="200" value="100">
+                </div>
+            </div>
+
+            <div class="control-section">
+                <h3>3. Chọn Thuật Toán</h3>
+                <div class="algorithm-buttons">
+                    <button id="rrHCBtn" class="btn btn-algorithm">Hill Climbing</button>
+                    <button id="saBtn" class="btn btn-algorithm">Simulated Annealing</button>
+                    <button id="compareBtn" class="btn btn-success">So Sánh Cả 2</button>
+                </div>
+                <div id="algorithmStatus" class="status-message"></div>
+            </div>
+        </div>
+
+        <!-- Results Panel -->
+        <div class="results-panel">
+            <div class="tabs">
+                <button class="tab-button active" data-tab="results">Kết Quả</button>
+                <button class="tab-button" data-tab="visualization">Biểu Đồ</button>
+                <button class="tab-button" data-tab="comparison">So Sánh</button>
+            </div>
+
+            <!-- Results Tab -->
+            <div id="results" class="tab-content active">
+                <div class="results-grid">
+                    <div class="result-card">
+                        <h3>Thuật Toán</h3>
+                        <p id="resultAlgorithm" class="result-value">-</p>
+                    </div>
+                    <div class="result-card">
+                        <h3>Chi Phí Tối Ưu</h3>
+                        <p id="resultCost" class="result-value">-</p>
+                    </div>
+                    <div class="result-card">
+                        <h3>Số Trạm Sạc</h3>
+                        <p id="resultStations" class="result-value">-</p>
+                    </div>
+                    <div class="result-card">
+                        <h3>Vị Trí Trạm Sạc</h3>
+                        <p id="resultSolution" class="result-value result-solution">-</p>
+                    </div>
+                </div>
+
+                <div class="result-details">
+                    <h3>Chi Tiết Kết Quả</h3>
+                    <div id="resultDetails" class="details-content"></div>
+                </div>
+            </div>
+
+            <!-- Visualization Tab -->
+            <div id="visualization" class="tab-content">
+                <div class="chart-container">
+                    <h3>Vị Trí Trạm Sạc và Khu Vực</h3>
+                    <canvas id="mapChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Phân Bố Dân Số</h3>
+                    <canvas id="populationChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Comparison Tab -->
+            <div id="comparison" class="tab-content">
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h3>Random Restart Hill Climbing</h3>
+                        <div id="rrHCComparison" class="comparison-details"></div>
+                    </div>
+                    <div class="comparison-card">
+                        <h3>Simulated Annealing</h3>
+                        <div id="saComparison" class="comparison-details"></div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3>Biểu Đồ Chi Phí Theo Chu Kỳ</h3>
+                    <canvas id="comparisonChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>So Sánh Thuật Toán</h3>
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 Charging Station Optimization System - Powered by Flask & Python</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
